@@ -28,7 +28,11 @@ interface UpdateResult {
   }
 }
 
-export function UpdateButton() {
+export function UpdateButton({
+  label = "Update Data",
+}: {
+  label?: string
+}) {
   const [status, setStatus] = useState<UpdateStatus>("idle")
   const [result, setResult] = useState<UpdateResult | null>(null)
   const [open, setOpen] = useState(false)
@@ -77,7 +81,7 @@ export function UpdateButton() {
           className="gap-2 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary"
         >
           <RefreshCw className="h-4 w-4" />
-          <span className="hidden sm:inline">Update Data</span>
+          <span className="hidden sm:inline">{label}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="border-border bg-card">

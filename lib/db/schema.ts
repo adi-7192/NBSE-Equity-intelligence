@@ -1,5 +1,6 @@
 import {
   boolean,
+  integer,
   index,
   jsonb,
   numeric,
@@ -160,6 +161,31 @@ export const watchlists = pgTable(
   },
   (table) => ({
     ownerNameUniqueIdx: uniqueIndex("watchlists_owner_name_idx").on(table.ownerUserId, table.name),
+  })
+)
+
+export const sharedWatchlistItems = pgTable(
+  "shared_watchlist_items",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    exchange: text("exchange").notNull().default("NSE"),
+    symbol: text("symbol").notNull(),
+    displayName: text("display_name").notNull(),
+    instrumentToken: integer("instrument_token").notNull(),
+    notes: text("notes"),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    exchangeSymbolUniqueIdx: uniqueIndex("shared_watchlist_exchange_symbol_idx").on(
+      table.exchange,
+      table.symbol
+    ),
+    instrumentTokenUniqueIdx: uniqueIndex("shared_watchlist_instrument_token_idx").on(
+      table.instrumentToken
+    ),
+    sortOrderIdx: index("shared_watchlist_sort_order_idx").on(table.sortOrder),
   })
 )
 

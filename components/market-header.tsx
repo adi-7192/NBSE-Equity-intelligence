@@ -3,16 +3,9 @@
 import Link from "next/link"
 import { TrendingUp, TrendingDown, Activity, Archive } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import type { LiveMarketSnapshot } from "@/lib/live-market/contracts"
 import { UpdateButton } from "./update-button"
-
-interface MarketBaseline {
-  date: string
-  nifty50: { value: number; change: number }
-  niftyMidcap100: { value: number; change: number }
-  brentCrude: { value: number; change: number }
-  inrUsd: { value: number; change: number }
-  gsec10y: { value: number; change: number }
-}
+import LiveMarketStatus from "./live-market-status"
 
 function Ticker({
   label,
@@ -62,10 +55,10 @@ function Ticker({
   )
 }
 
-export default function MarketHeader({ marketBaseline }: { marketBaseline: MarketBaseline }) {
+export default function MarketHeader({ marketSnapshot }: { marketSnapshot: LiveMarketSnapshot }) {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      {/* Top bar — brand + date */}
+      {/* Top bar — brand + live market status */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/50">
         <div className="flex items-center gap-2.5">
           <Activity className="size-4 text-primary" />
@@ -73,16 +66,10 @@ export default function MarketHeader({ marketBaseline }: { marketBaseline: Marke
             Equity Intelligence
           </span>
           <span className="hidden sm:inline text-muted-foreground font-mono text-xs">
-            NSE / BSE · Large &amp; Mid Cap
+            Live Market · NSE / BSE
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-bullish animate-pulse" />
-            <span className="font-mono text-xs text-muted-foreground">
-              Week of {marketBaseline.date}
-            </span>
-          </div>
           <Link href="/archives">
             <Button
               variant="ghost"
@@ -93,7 +80,19 @@ export default function MarketHeader({ marketBaseline }: { marketBaseline: Marke
               <span className="hidden sm:inline">Archives</span>
             </Button>
           </Link>
-          <UpdateButton />
+          <UpdateButton label="Refresh Weekly Brief" />
+        </div>
+      </div>
+
+      <div className="border-b border-border/50 px-4 py-2.5">
+        <div className="mx-auto max-w-5xl">
+          <LiveMarketStatus
+            market={marketSnapshot.market}
+            freshness={marketSnapshot.freshness}
+            connection={marketSnapshot.connection}
+            asOf={marketSnapshot.asOf}
+            source={marketSnapshot.source}
+          />
         </div>
       </div>
 
@@ -102,39 +101,30 @@ export default function MarketHeader({ marketBaseline }: { marketBaseline: Marke
         <div className="flex items-center gap-6 px-4 py-3 min-w-max">
           <Ticker
             label="NIFTY 50"
-            value={marketBaseline.nifty50.value}
-            change={marketBaseline.nifty50.change}
+            value={marketSnapshot.benchmarks.nifty50.lastPrice ?? 0}
+            change={marketSnapshot.benchmarks.nifty50.changePercent ?? 0}
             decimals={0}
           />
           <div className="w-px h-8 bg-border" />
           <Ticker
-            label="MIDCAP 100"
-            value={marketBaseline.niftyMidcap100.value}
-            change={marketBaseline.niftyMidcap100.change}
+            label="SENSEX"
+            value={marketSnapshot.benchmarks.sensex.lastPrice ?? 0}
+            change={marketSnapshot.benchmarks.sensex.changePercent ?? 0}
             decimals={0}
           />
           <div className="w-px h-8 bg-border" />
           <Ticker
-            label="BRENT $/bbl"
-            value={marketBaseline.brentCrude.value}
-            change={marketBaseline.brentCrude.change}
-            prefix="$"
-            decimals={1}
+            label="NIFTY BANK"
+            value={marketSnapshot.benchmarks.niftyBank.lastPrice ?? 0}
+            change={marketSnapshot.benchmarks.niftyBank.changePercent ?? 0}
+            decimals={0}
           />
           <div className="w-px h-8 bg-border" />
           <Ticker
-            label="INR/USD"
-            value={marketBaseline.inrUsd.value}
-            change={marketBaseline.inrUsd.change}
-            decimals={2}
-          />
-          <div className="w-px h-8 bg-border" />
-          <Ticker
-            label="10Y G-SEC"
-            value={marketBaseline.gsec10y.value}
-            change={marketBaseline.gsec10y.change}
-            suffix="%"
-            decimals={2}
+            label="MIDCAP 150"
+            value={marketSnapshot.benchmarks.midcap150.lastPrice ?? 0}
+            change={marketSnapshot.benchmarks.midcap150.changePercent ?? 0}
+            decimals={0}
           />
         </div>
       </div>

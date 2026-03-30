@@ -10,7 +10,7 @@ This milestone turns the current AI-driven weekly digest into a usable personal 
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Foundation & Access** - Add PostgreSQL persistence and lightweight authentication so the product has a durable, protected base.
+- [x] **Phase 1: Foundation & Access** - Add PostgreSQL persistence and lightweight authentication so the product has a durable, protected base.
 - [ ] **Phase 2: Live Market Data** - Introduce Zerodha-backed live prices, watchlists, and market overview surfaces.
 - [ ] **Phase 3: Fundamentals Screener** - Build the stock-universe ingestion pipeline and the core screener experience.
 - [ ] **Phase 4: Stock Research Workspace** - Add individual stock pages, peer comparison, and scoring workflows.
@@ -34,8 +34,8 @@ This milestone turns the current AI-driven weekly digest into a usable personal 
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Establish the persistent data layer, schema, and archive migration path
-- [ ] 01-02: Add auth, session handling, and route protection
+- [x] 01-01: Establish the persistent data layer, schema, and archive migration path
+- [x] 01-02: Add auth, session handling, and route protection
 
 ### Phase 2: Live Market Data
 **Goal**: Introduce real-time market data delivery for the watchlist and market overview experience.
@@ -52,8 +52,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Build the server-side price relay and market data cache
-- [ ] 02-02: Ship the live watchlist and market overview UI
+- [x] 02-01: Build the server-side price relay and market data cache
+- [x] 02-02: Ship the live watchlist and market overview UI
 
 ### Phase 3: Fundamentals Screener
 **Goal**: Turn the product into a conviction-finding tool by ingesting fundamentals and exposing a usable screener.
@@ -135,8 +135,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Access | 0/2 | Not started | - |
-| 2. Live Market Data | 0/2 | Not started | - |
+| 1. Foundation & Access | 2/2 | Complete | 2026-03-30 |
+| 2. Live Market Data | 2/2 | Implemented (validation pending) | 2026-03-30 |
 | 3. Fundamentals Screener | 0/2 | Not started | - |
 | 4. Stock Research Workspace | 0/2 | Not started | - |
 | 5. Portfolio Monitor | 0/2 | Not started | - |

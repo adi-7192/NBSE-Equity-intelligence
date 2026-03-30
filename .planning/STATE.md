@@ -5,34 +5,35 @@
 See: `.planning/PROJECT.md` (updated 2026-03-30)
 
 **Core value:** A stock screener + portfolio monitor that lets you go from 5,000+ Indian stocks to a conviction-ready shortlist — with real fundamentals, live Kite prices, and AI-powered weekly intelligence — in one tab.
-**Current focus:** Phase 2 - Live Data Relay & Market Inputs (next)
+**Current focus:** Phase 2 - Live Market Data
 
 ## Current Position
 
-Phase: 1 of 6 (Foundation & Access)
+Phase: 2 of 6 (Live Market Data)
 Plan: 2 of 2 in current phase
-Status: Phase 1 complete and locally verified; ready for deployment env setup and Phase 2 planning
-Last activity: 2026-03-30 — Fixed server-action redirect handling after real auth testing uncovered NEXT_REDIRECT query leakage
+Status: Phase 2 implementation complete; real relay/Kite validation pending
+Last activity: 2026-03-30 — Implemented the live-market UI/admin layer, applied the new DB migration, and smoke-tested login, dashboard, and admin flows
 
-Progress: [███░░░░░░░] 30%
+Progress: [██████░░░░] 55%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
+- Total plans completed: 4
 - Average duration: 40 min
-- Total execution time: 1.3 hours
+- Total execution time: 2.7 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 2 | 80 min | 40 min |
-| 2-6 | 0 | 0 min | — |
+| 2 | 2 | 80 min | 40 min |
+| 3-6 | 0 | 0 min | — |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 complete, 01-02 complete
-- Trend: Foundation phase delivered and verified locally
+- Last 5 plans: 01-01 complete, 01-02 complete, 02-01 complete, 02-02 complete
+- Trend: Phase 2 code is implemented end-to-end; remaining work is operational validation on real live data
 
 ## Accumulated Context
 
@@ -51,11 +52,12 @@ None yet.
 
 - Zerodha Kite live delivery needs a long-lived process plus SSE or equivalent relay; Vercel serverless alone is not enough.
 - Fundamentals-source selection is still open if exchange bulk files plus scraping prove brittle.
-- Real Supabase and Better Auth environment values are still required before first authenticated runtime boot on local and Vercel.
-- Real user testing exposed and confirmed a redirect-handling bug in login/admin server actions, which is now fixed locally.
+- Real production Supabase and Better Auth environment values are still required before first authenticated runtime boot on Vercel.
+- Phase 2 will require real Kite credentials plus an operational plan for refreshing the access token.
+- Phase 2 still needs a real market-hours validation pass with the relay running and fresh Kite credentials before `LIVE-01`, `LIVE-02`, and `LIVE-03` can be marked complete.
 
 ## Session Continuity
 
-Last session: 2026-03-30 14:20
-Stopped at: Phase 1 auth flow re-tested and redirect bug fixed; Phase 2 is next
-Resume file: .planning/ROADMAP.md
+Last session: 2026-03-30 15:59
+Stopped at: Phase 2 implementation complete, validation pending
+Resume file: .planning/phases/02-live-market-data/02-02-SUMMARY.md

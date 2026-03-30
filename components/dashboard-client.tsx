@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { startTransition, useEffect, useEffectEvent, useState } from "react"
 import { BarChart2, Bell, BookOpen, Target, RefreshCw, Eye } from "lucide-react"
 import { cn } from "@/lib/utils"
 import MarketHeader from "@/components/market-header"
@@ -9,69 +9,198 @@ import MacroPulse from "@/components/macro-pulse"
 import SectorRankings from "@/components/sector-rankings"
 import StockPicks from "@/components/stock-picks"
 import PicksUnderReview from "@/components/picks-under-review"
-import WatchNextWeek from "@/components/watch-next-week"
+import LiveWatchlist from "@/components/live-watchlist"
 import type {
   AlertCard,
   MacroBullet,
   SectorRanking,
   StockPick,
   ReviewPick,
-  WatchItem,
 } from "@/lib/data"
+import type {
+  LiveMarketSnapshot,
+  MarketHeartbeatEventData,
+  MarketInstrumentQuote,
+  MarketQuotesEventData,
+  MarketStatusEventData,
+} from "@/lib/live-market/contracts"
 
 interface Props {
-  marketBaseline: {
-    date: string
-    nifty50: { value: number; change: number }
-    niftyMidcap100: { value: number; change: number }
-    brentCrude: { value: number; change: number }
-    inrUsd: { value: number; change: number }
-    gsec10y: { value: number; change: number }
-  }
+  initialMarketSnapshot: LiveMarketSnapshot
   alertCards: AlertCard[]
   macroPulse: MacroBullet[]
   sectorRankings: SectorRanking[]
   stockPicks: StockPick[]
   picksUnderReview: ReviewPick[]
-  watchNextWeek: WatchItem[]
 }
 
 type Tab = "alerts" | "digest" | "picks" | "review" | "watch"
 
+function mergeQuoteList(items: MarketInstrumentQuote[], quotes: MarketInstrumentQuote[]) {
+  const quotesByToken = new Map(
+    quotes
+      .filter((quote) => quote.instrumentToken !== null)
+      .map((quote) => [quote.instrumentToken, quote])
+  )
+
+  return items.map((item) => {
+    if (item.instrumentToken === null) {
+      return item
+    }
+
+    const next = quotesByToken.get(item.instrumentToken)
+    return next ? { ...item, ...next } : item
+  })
+}
+
 export default function DashboardClient({
-  marketBaseline,
+  initialMarketSnapshot,
   alertCards,
   macroPulse,
   sectorRankings,
   stockPicks,
   picksUnderReview,
-  watchNextWeek,
 }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>("alerts")
+  const [marketSnapshot, setMarketSnapshot] = useState(initialMarketSnapshot)
+
+  const refreshSnapshot = useEffectEvent(async () => {
+    const response = await fetch("/api/market/snapshot", {
+      cache: "no-store",
+    })
+
+    const snapshot = (await response.json()) as LiveMarketSnapshot
+    startTransition(() => {
+      setMarketSnapshot(snapshot)
+    })
+  })
+
+  const applyQuotes = useEffectEvent((payload: MarketQuotesEventData) => {
+    startTransition(() => {
+      setMarketSnapshot((current) => ({
+        ...current,
+        sequence: payload.sequence,
+        asOf: payload.asOf,
+        market: payload.market,
+        freshness: payload.freshness,
+        connection: payload.connection,
+        benchmarks: {
+          ...current.benchmarks,
+          nifty50:
+            payload.quotes.find((quote) => quote.instrumentToken === current.benchmarks.nifty50.instrumentToken) ??
+            current.benchmarks.nifty50,
+          sensex:
+            payload.quotes.find((quote) => quote.instrumentToken === current.benchmarks.sensex.instrumentToken) ??
+            current.benchmarks.sensex,
+          niftyBank:
+            payload.quotes.find((quote) => quote.instrumentToken === current.benchmarks.niftyBank.instrumentToken) ??
+            current.benchmarks.niftyBank,
+          midcap150:
+            payload.quotes.find((quote) => quote.instrumentToken === current.benchmarks.midcap150.instrumentToken) ??
+            current.benchmarks.midcap150,
+        },
+        watchlist: mergeQuoteList(current.watchlist, payload.quotes),
+      }))
+    })
+  })
+
+  const applyStatus = useEffectEvent((payload: MarketStatusEventData) => {
+    startTransition(() => {
+      setMarketSnapshot((current) => ({
+        ...current,
+        sequence: payload.sequence,
+        asOf: payload.asOf,
+        market: payload.market,
+        freshness: payload.freshness,
+        connection: payload.connection,
+      }))
+    })
+  })
+
+  const applyHeartbeat = useEffectEvent((payload: MarketHeartbeatEventData) => {
+    startTransition(() => {
+      setMarketSnapshot((current) => ({
+        ...current,
+        sequence: payload.sequence,
+        connection: {
+          ...current.connection,
+          ...payload.connection,
+          lastHeartbeatAt: payload.at,
+        },
+      }))
+    })
+  })
+
+  useEffect(() => {
+    if (marketSnapshot.market.phase !== "open") {
+      const interval = window.setInterval(() => {
+        void refreshSnapshot()
+      }, 60_000)
+
+      const handleFocus = () => {
+        void refreshSnapshot()
+      }
+
+      window.addEventListener("focus", handleFocus)
+      return () => {
+        window.clearInterval(interval)
+        window.removeEventListener("focus", handleFocus)
+      }
+    }
+
+    const stream = new EventSource("/api/market/stream")
+
+    stream.addEventListener("snapshot", (event) => {
+      const snapshot = JSON.parse((event as MessageEvent<string>).data) as LiveMarketSnapshot
+      startTransition(() => {
+        setMarketSnapshot(snapshot)
+      })
+    })
+
+    stream.addEventListener("quotes", (event) => {
+      applyQuotes(JSON.parse((event as MessageEvent<string>).data) as MarketQuotesEventData)
+    })
+
+    stream.addEventListener("status", (event) => {
+      applyStatus(JSON.parse((event as MessageEvent<string>).data) as MarketStatusEventData)
+    })
+
+    stream.addEventListener("heartbeat", (event) => {
+      applyHeartbeat(JSON.parse((event as MessageEvent<string>).data) as MarketHeartbeatEventData)
+    })
+
+    stream.onerror = () => {
+      void refreshSnapshot()
+    }
+
+    return () => {
+      stream.close()
+    }
+  }, [marketSnapshot.market.phase])
 
   const tabs: { id: Tab; label: string; icon: React.ElementType; count?: number }[] = [
     { id: "alerts", label: "Event Radar", icon: Bell, count: alertCards.length },
     { id: "digest", label: "Macro & Sectors", icon: BarChart2 },
     { id: "picks", label: "Stock Picks", icon: Target, count: stockPicks.length },
     { id: "review", label: "Under Review", icon: RefreshCw, count: picksUnderReview.length },
-    { id: "watch", label: "Watch List", icon: Eye, count: watchNextWeek.length },
+    { id: "watch", label: "Live Watchlist", icon: Eye, count: marketSnapshot.watchlist.length },
   ]
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <MarketHeader marketBaseline={marketBaseline} />
+      <MarketHeader marketSnapshot={marketSnapshot} />
 
-      {/* Page title */}
+      {/* Intelligence title */}
       <div className="border-b border-border bg-card/50 px-4 py-3">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-2">
             <BookOpen className="size-4 text-primary" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              Weekly Digest
+              Weekly Intelligence
             </span>
             <span className="font-mono text-xs text-muted-foreground">·</span>
             <span className="font-mono text-xs text-muted-foreground">
-              NSE/BSE · Large &amp; Mid Cap · 6–12M Horizon
+              Analysis Layer · Archives, alerts, sectors, and conviction work
             </span>
           </div>
         </div>
@@ -133,7 +262,12 @@ export default function DashboardClient({
 
         {activeTab === "review" && <PicksUnderReview picks={picksUnderReview} />}
 
-        {activeTab === "watch" && <WatchNextWeek items={watchNextWeek} />}
+        {activeTab === "watch" && (
+          <LiveWatchlist
+            items={marketSnapshot.watchlist}
+            connection={marketSnapshot.connection}
+          />
+        )}
       </main>
 
       {/* Footer */}
