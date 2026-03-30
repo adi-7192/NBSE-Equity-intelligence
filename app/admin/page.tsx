@@ -1,5 +1,6 @@
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { isRedirectError } from "next/dist/client/components/redirect-error"
 import { revalidatePath } from "next/cache"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -56,6 +57,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       revalidatePath("/admin")
       redirect("/admin?message=Account%20created")
     } catch (error) {
+      if (isRedirectError(error)) {
+        throw error
+      }
+
       redirect(`/admin?error=${encodeURIComponent(getAuthErrorMessage(error))}`)
     }
   }

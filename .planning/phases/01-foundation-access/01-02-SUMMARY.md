@@ -98,6 +98,7 @@ None - plan executed within the intended scope.
 
 - The repo shipped with a lint script but no ESLint toolchain/config, so Phase 1 added a Next-compatible flat config before local verification.
 - Generated `.codex` and `.claude` tooling directories polluted repo-level linting, so the lint config now ignores those machine-generated files.
+- Real browser testing surfaced a `NEXT_REDIRECT` bug in the login and admin server actions; successful redirects were being caught and rendered as query-string errors until those actions were updated to rethrow Next redirect errors.
 
 ## User Setup Required
 
@@ -110,6 +111,7 @@ External services require manual configuration:
 
 Phase 1 now has the durable data and access-control foundation required for the Kite relay and broader market-data work in Phase 2.
 The remaining setup work is operational rather than architectural: provide real environment values, run the generated migration against Supabase, and verify the first admin bootstrap with those credentials.
+Post-bootstrap browser testing now confirms that admin creation, admin-only access, non-admin blocking, and redirect behavior are working as expected.
 
 ---
 *Phase: 01-foundation-access*

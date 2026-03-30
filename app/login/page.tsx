@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { isRedirectError } from "next/dist/client/components/redirect-error"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -37,6 +38,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
       redirect("/")
     } catch (error) {
+      if (isRedirectError(error)) {
+        throw error
+      }
+
       redirect(`/login?error=${encodeURIComponent(getAuthErrorMessage(error))}`)
     }
   }
@@ -56,6 +61,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
       redirect("/")
     } catch (error) {
+      if (isRedirectError(error)) {
+        throw error
+      }
+
       redirect(`/login?error=${encodeURIComponent(getAuthErrorMessage(error))}`)
     }
   }

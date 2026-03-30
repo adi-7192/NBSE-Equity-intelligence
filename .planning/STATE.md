@@ -12,7 +12,7 @@ See: `.planning/PROJECT.md` (updated 2026-03-30)
 Phase: 1 of 6 (Foundation & Access)
 Plan: 2 of 2 in current phase
 Status: Phase 1 complete and locally verified; ready for deployment env setup and Phase 2 planning
-Last activity: 2026-03-30 — Passed lint, TypeScript, and Drizzle generation after finishing auth and user-scoped persistence
+Last activity: 2026-03-30 — Fixed server-action redirect handling after real auth testing uncovered NEXT_REDIRECT query leakage
 
 Progress: [███░░░░░░░] 30%
 
@@ -52,9 +52,10 @@ None yet.
 - Zerodha Kite live delivery needs a long-lived process plus SSE or equivalent relay; Vercel serverless alone is not enough.
 - Fundamentals-source selection is still open if exchange bulk files plus scraping prove brittle.
 - Real Supabase and Better Auth environment values are still required before first authenticated runtime boot on local and Vercel.
+- Real user testing exposed and confirmed a redirect-handling bug in login/admin server actions, which is now fixed locally.
 
 ## Session Continuity
 
-Last session: 2026-03-30 14:05
-Stopped at: Phase 1 verified locally; Phase 2 is next
+Last session: 2026-03-30 14:20
+Stopped at: Phase 1 auth flow re-tested and redirect bug fixed; Phase 2 is next
 Resume file: .planning/ROADMAP.md
