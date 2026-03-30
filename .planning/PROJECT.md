@@ -8,6 +8,15 @@ A personal Bloomberg Terminal for Indian markets built as a modular financial op
 
 A stock screener + portfolio monitor that lets you go from 5,000+ Indian stocks to a conviction-ready shortlist — with real fundamentals, live Kite prices, and AI-powered weekly intelligence — in one tab.
 
+## Current Milestone: v1.0 Screener + Portfolio Monitor
+
+**Goal:** Turn the existing weekly intelligence dashboard into a persistent, authenticated Indian-market terminal centered on screening and portfolio monitoring with real data.
+
+**Target features:**
+- PostgreSQL persistence and lightweight auth for a fixed 2-5 user group
+- Zerodha-backed live market data, fundamentals screening, and stock research workflows
+- Portfolio monitoring, macro/news ingestion, and AI weekly intelligence powered by real stored data
+
 ## Requirements
 
 ### Validated
@@ -123,4 +132,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 after initialization*
+*Last updated: 2026-03-30 after GSD state reconstruction*
