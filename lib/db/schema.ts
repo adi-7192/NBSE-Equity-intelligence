@@ -189,6 +189,33 @@ export const sharedWatchlistItems = pgTable(
   })
 )
 
+export const userIntegrations = pgTable(
+  "user_integrations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ownerUserId: text("owner_user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    provider: text("provider").notNull(),
+    encryptedConfig: text("encrypted_config").notNull(),
+    encryptionIv: text("encryption_iv").notNull(),
+    encryptionAuthTag: text("encryption_auth_tag").notNull(),
+    maskedSummary: jsonb("masked_summary").$type<Record<string, string>>().notNull(),
+    connectionState: text("connection_state").notNull().default("saved"),
+    lastValidatedAt: timestamp("last_validated_at", { mode: "date", withTimezone: true }),
+    lastError: text("last_error"),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => ({
+    ownerProviderUniqueIdx: uniqueIndex("user_integrations_owner_provider_idx").on(
+      table.ownerUserId,
+      table.provider
+    ),
+    ownerIdx: index("user_integrations_owner_idx").on(table.ownerUserId),
+  })
+)
+
 export const watchlistItems = pgTable(
   "watchlist_items",
   {

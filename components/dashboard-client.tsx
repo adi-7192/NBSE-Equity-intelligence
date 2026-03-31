@@ -187,12 +187,11 @@ export default function DashboardClient({
   ]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="space-y-6 text-foreground">
       <MarketHeader marketSnapshot={marketSnapshot} />
 
-      {/* Intelligence title */}
-      <div className="border-b border-border bg-card/50 px-4 py-3">
-        <div className="max-w-5xl mx-auto">
+      <div className="rounded-[28px] border border-border/70 bg-card/75 px-5 py-4">
+        <div>
           <div className="flex items-center gap-2">
             <BookOpen className="size-4 text-primary" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
@@ -206,9 +205,8 @@ export default function DashboardClient({
         </div>
       </div>
 
-      {/* Tab navigation */}
-      <div className="border-b border-border bg-card/30 sticky top-[91px] z-40 overflow-x-auto">
-        <div className="max-w-5xl mx-auto px-4">
+      <div className="overflow-x-auto rounded-[28px] border border-border/70 bg-card/65">
+        <div className="px-3">
           <nav className="flex gap-0 min-w-max" role="tablist" aria-label="Digest sections">
             {tabs.map((tab) => {
               const Icon = tab.icon
@@ -247,8 +245,7 @@ export default function DashboardClient({
         </div>
       </div>
 
-      {/* Main content */}
-      <main className="max-w-5xl mx-auto px-4 py-6 space-y-8">
+      <main className="space-y-8 rounded-[32px] border border-border/70 bg-card/55 p-4 md:p-6">
         {activeTab === "alerts" && <AlertCards alerts={alertCards} />}
 
         {activeTab === "digest" && (
@@ -270,9 +267,8 @@ export default function DashboardClient({
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-16 px-4 py-6">
-        <div className="max-w-5xl mx-auto">
+      <footer className="rounded-[24px] border border-border/70 bg-card/55 px-5 py-5">
+        <div>
           <p className="font-mono text-[11px] text-muted-foreground leading-relaxed">
             <strong className="text-foreground">Disclaimer:</strong> This digest is for informational
             and research purposes only. It does not constitute investment advice. All picks carry

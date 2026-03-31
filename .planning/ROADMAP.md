@@ -12,6 +12,7 @@ This milestone turns the current AI-driven weekly digest into a usable personal 
 
 - [x] **Phase 1: Foundation & Access** - Add PostgreSQL persistence and lightweight authentication so the product has a durable, protected base.
 - [ ] **Phase 2: Live Market Data** - Introduce Zerodha-backed live prices, watchlists, and market overview surfaces.
+- [ ] **Phase 02.1: Workspace Shell & Personal Integrations (INSERTED)** - Redesign the app shell, navigation, dark-theme UX, and per-user integrations/settings before deeper feature work.
 - [ ] **Phase 3: Fundamentals Screener** - Build the stock-universe ingestion pipeline and the core screener experience.
 - [ ] **Phase 4: Stock Research Workspace** - Add individual stock pages, peer comparison, and scoring workflows.
 - [ ] **Phase 5: Portfolio Monitor** - Track holdings, live P&L, risk alerts, and portfolio analytics.
@@ -54,6 +55,25 @@ Plans:
 Plans:
 - [x] 02-01: Build the server-side price relay and market data cache
 - [x] 02-02: Ship the live watchlist and market overview UI
+
+### Phase 02.1: Workspace Shell & Personal Integrations (INSERTED)
+**Goal**: Redesign the product shell so the terminal feels like a coherent private workspace, with durable navigation, stronger dark-theme UI/UX, and per-user settings for Zerodha and AI providers.
+**Depends on**: Phase 2
+**Requirements**: [SHELL-01, SHELL-02, INTG-01, INTG-02]
+**Canonical refs**:
+- `.planning/PROJECT.md` — product vision, terminal-style direction, and private-workspace scope
+- `.planning/codebase/ARCHITECTURE.md` — current dashboard composition and route entry points
+- `.planning/codebase/STACK.md` — Next.js/Tailwind/Shadcn stack and reusable UI primitives
+- `.planning/phases/02-live-market-data/02-02-SUMMARY.md` — current shell limitations and live-market/dashboard baseline
+**Success Criteria** (what must be TRUE):
+  1. The app has a clear reusable shell with primary navigation, consistent dark-theme hierarchy, and better information density.
+  2. Users can access a dedicated settings area for profile, integrations, and system/account status.
+  3. Zerodha and AI provider credentials are stored per user, protected server-side, and never exposed raw in the frontend.
+**Plans**: 0 plans
+
+Plans:
+- [x] 02.1-01: Build the shared workspace shell, navigation, and visual system
+- [x] 02.1-02: Add secure personal integrations and the dedicated settings experience
 
 ### Phase 3: Fundamentals Screener
 **Goal**: Turn the product into a conviction-finding tool by ingesting fundamentals and exposing a usable screener.
@@ -131,12 +151,13 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Access | 2/2 | Complete | 2026-03-30 |
 | 2. Live Market Data | 2/2 | Implemented (validation pending) | 2026-03-30 |
+| 2.1. Workspace Shell & Personal Integrations | 2/2 | Implemented | 2026-03-31 |
 | 3. Fundamentals Screener | 0/2 | Not started | - |
 | 4. Stock Research Workspace | 0/2 | Not started | - |
 | 5. Portfolio Monitor | 0/2 | Not started | - |

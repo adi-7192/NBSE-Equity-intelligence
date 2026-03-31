@@ -1,8 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { TrendingUp, TrendingDown, Activity, Archive } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { TrendingUp, TrendingDown, Activity, Sparkles } from "lucide-react"
 import type { LiveMarketSnapshot } from "@/lib/live-market/contracts"
 import { UpdateButton } from "./update-button"
 import LiveMarketStatus from "./live-market-status"
@@ -57,69 +55,67 @@ function Ticker({
 
 export default function MarketHeader({ marketSnapshot }: { marketSnapshot: LiveMarketSnapshot }) {
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      {/* Top bar — brand + live market status */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/50">
-        <div className="flex items-center gap-2.5">
-          <Activity className="size-4 text-primary" />
-          <span className="font-mono text-xs font-bold tracking-[0.2em] text-primary uppercase">
-            Equity Intelligence
-          </span>
-          <span className="hidden sm:inline text-muted-foreground font-mono text-xs">
-            Live Market · NSE / BSE
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/archives">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1.5 text-muted-foreground hover:text-foreground"
-            >
-              <Archive className="h-4 w-4" />
-              <span className="hidden sm:inline">Archives</span>
-            </Button>
-          </Link>
-          <UpdateButton label="Refresh Weekly Brief" />
-        </div>
-      </div>
-
-      <div className="border-b border-border/50 px-4 py-2.5">
-        <div className="mx-auto max-w-5xl">
-          <LiveMarketStatus
-            market={marketSnapshot.market}
-            freshness={marketSnapshot.freshness}
-            connection={marketSnapshot.connection}
-            asOf={marketSnapshot.asOf}
-            source={marketSnapshot.source}
-          />
+    <header className="overflow-hidden rounded-[32px] border border-border/70 bg-card/80 shadow-[0_32px_120px_-70px_rgba(214,165,74,0.45)]">
+      <div className="border-b border-border/60 px-5 py-5 md:px-6">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <Activity className="size-4 text-primary" />
+              <span className="font-mono text-xs font-bold tracking-[0.2em] text-primary uppercase">
+                Live Market
+              </span>
+              <span className="hidden sm:inline text-muted-foreground font-mono text-xs">
+                NSE / BSE terminal layer
+              </span>
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold text-foreground md:text-[2rem]">
+              Benchmarks, trust state, and market context at a glance.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
+              This top layer is now explicitly about live market awareness. The weekly intelligence
+              sections stay below as a separate analysis surface.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden rounded-full border border-border/70 bg-background/75 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground lg:flex">
+              <Sparkles className="mr-2 size-3.5 text-primary" />
+              Weekly refresh remains manual
+            </div>
+            <UpdateButton label="Refresh Weekly Brief" />
+          </div>
         </div>
       </div>
 
-      {/* Market baseline tickers */}
-      <div className="overflow-x-auto">
-        <div className="flex items-center gap-6 px-4 py-3 min-w-max">
+      <div className="border-b border-border/60 px-5 py-4 md:px-6">
+        <LiveMarketStatus
+          market={marketSnapshot.market}
+          freshness={marketSnapshot.freshness}
+          connection={marketSnapshot.connection}
+          asOf={marketSnapshot.asOf}
+          source={marketSnapshot.source}
+        />
+      </div>
+
+      <div className="overflow-x-auto px-5 py-5 md:px-6">
+        <div className="grid min-w-[48rem] grid-cols-4 gap-3">
           <Ticker
             label="NIFTY 50"
             value={marketSnapshot.benchmarks.nifty50.lastPrice ?? 0}
             change={marketSnapshot.benchmarks.nifty50.changePercent ?? 0}
             decimals={0}
           />
-          <div className="w-px h-8 bg-border" />
           <Ticker
             label="SENSEX"
             value={marketSnapshot.benchmarks.sensex.lastPrice ?? 0}
             change={marketSnapshot.benchmarks.sensex.changePercent ?? 0}
             decimals={0}
           />
-          <div className="w-px h-8 bg-border" />
           <Ticker
             label="NIFTY BANK"
             value={marketSnapshot.benchmarks.niftyBank.lastPrice ?? 0}
             change={marketSnapshot.benchmarks.niftyBank.changePercent ?? 0}
             decimals={0}
           />
-          <div className="w-px h-8 bg-border" />
           <Ticker
             label="MIDCAP 150"
             value={marketSnapshot.benchmarks.midcap150.lastPrice ?? 0}

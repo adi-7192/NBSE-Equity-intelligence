@@ -21,6 +21,13 @@
 - [ ] **LIVE-02**: A user can view a live watchlist with last price, percentage change, and volume.
 - [ ] **LIVE-03**: A user can view a market overview for Nifty 50, Sensex, Nifty Bank, and Midcap 150.
 
+### Workspace Shell & Personal Integrations
+
+- [ ] **SHELL-01**: A signed-in user works inside a reusable dark-themed app shell with durable primary navigation for Dashboard, Archives, Screener, Portfolio, Settings, and role-aware Admin access.
+- [ ] **SHELL-02**: The shell uses a stronger typography, spacing, and state system so live, empty, loading, and disconnected views feel intentional rather than improvised.
+- [ ] **INTG-01**: A signed-in user can manage personal Zerodha, OpenAI, Gemini, and Anthropic integrations from a dedicated settings area.
+- [ ] **INTG-02**: Personal integration credentials are stored securely server-side, masked after save, and never exposed raw in the frontend.
+
 ### Screener
 
 - [ ] **SCRN-01**: A user can filter Indian stocks by PE, PB, ROE, ROCE, revenue growth, profit margins, debt/equity, and dividend yield.
@@ -84,6 +91,10 @@
 | LIVE-01 | Phase 2 | Pending |
 | LIVE-02 | Phase 2 | Pending |
 | LIVE-03 | Phase 2 | Pending |
+| SHELL-01 | Phase 2.1 | Pending |
+| SHELL-02 | Phase 2.1 | Pending |
+| INTG-01 | Phase 2.1 | Pending |
+| INTG-02 | Phase 2.1 | Pending |
 | SCRN-01 | Phase 3 | Pending |
 | SCRN-02 | Phase 3 | Pending |
 | SCRN-03 | Phase 3 | Pending |
@@ -100,8 +111,8 @@
 | AI-01 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 21 total
-- Mapped to phases: 21
+- v1 requirements: 25 total
+- Mapped to phases: 25
 - Unmapped: 0
 
 ---

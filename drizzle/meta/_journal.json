@@ -15,6 +15,13 @@
       "when": 1774878658719,
       "tag": "0001_warm_mercury",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774948924368,
+      "tag": "0002_jittery_stone_men",
+      "breakpoints": true
     }
   ]
 }
